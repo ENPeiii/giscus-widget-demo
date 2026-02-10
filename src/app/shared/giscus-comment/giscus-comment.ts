@@ -1,22 +1,12 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, effect, ElementRef, input, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
 
 
 @Component({
   selector: 'app-giscus-comment',
   template: `
-    <div #giscusContainer class="giscus-wrapper">
-
-    </div>
+    <div #giscusContainer></div>
   `,
-  styles: [
-    `
-      .giscus-wrapper {
-        display: block;
-        margin: 2rem 0;
-        min-height: 150px; /* 預留空間防止 Layout Shift */
-      }
-    `,
-  ],
+  styles: [],
 })
 export class GiscusComment {
   // 取得 Template 中的容器引用
