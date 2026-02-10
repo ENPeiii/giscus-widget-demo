@@ -1,26 +1,11 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, effect, input } from '@angular/core';
-import 'giscus';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, effect, ElementRef, input, Renderer2, ViewChild } from '@angular/core';
+
 
 @Component({
   selector: 'app-giscus-comment',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   template: `
-    <div class="giscus-wrapper">
-      <giscus-widget
-        [attr.repo]="repo()"
-        [attr.repo-id]="repoId()"
-        [attr.category]="category()"
-        [attr.category-id]="categoryId()"
-        [attr.mapping]="mapping()"
-        [attr.strict]="strict()"
-        [attr.term]="'test'"
-        [attr.reactions-enabled]="reactionsEnabled()"
-        [attr.emit-metadata]="emitMetadata()"
-        [attr.input-position]="inputPosition()"
-        [attr.theme]="theme()"
-        [attr.lang]="lang()"
-        [attr.loading]="loading()"
-      ></giscus-widget>
+    <div #giscusContainer class="giscus-wrapper">
+
     </div>
   `,
   styles: [
@@ -34,23 +19,39 @@ import 'giscus';
   ],
 })
 export class GiscusComment {
-  repo = input.required<string>();
-  repoId = input.required<string>();
-  categoryId = input.required<'DIC_kwDORL2h1M4C2FFF'>();
-  category = input<string>('General');
-  mapping = input<string>('specific-term');
-  strict = input<string>('0');
-  reactionsEnabled = input<string>('1');
-  emitMetadata = input<string>('0');
-  inputPosition = input<'top' | 'bottom'>('top');
-  theme = input<string>('light');
-  lang = input<string>('zh-TW');
-  loading = input<'lazy' | 'eager'>('lazy');
+  // 取得 Template 中的容器引用
+  @ViewChild('giscusContainer', { static: true }) giscusContainer!: ElementRef;
 
-  constructor() {
-    // 如果未來需要針對 theme 改變做額外處理，可以寫在 effect 裡
-    effect(() => {
-      // console.log('Current theme changed to:', this.theme());
+  constructor(private renderer: Renderer2) {}
+
+  ngOnInit(): void{
+    // 1. 建立 script 標籤
+    const scriptEl = this.renderer.createElement('script');
+
+    // 2. 將你提供的 script 參數轉換為屬性
+    const attributes = {
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'ENPeiii/giscus-widget-demo',
+      'data-repo-id': 'R_kgDORL2h1A',
+      'data-category': 'Announcements',
+      'data-category-id': 'DIC_kwDORL2h1M4C2FFE',
+      'data-mapping': 'title',
+      'data-strict': '0',
+      'data-reactions-enabled': '1',
+      'data-emit-metadata': '0',
+      'data-input-position': 'bottom',
+      'data-theme': 'preferred_color_scheme',
+      'data-lang': 'zh-TW',
+      'crossorigin': 'anonymous',
+      'async': ''
+    };
+
+    // 3. 迴圈設定屬性
+    Object.entries(attributes).forEach(([key, value]) => {
+      this.renderer.setAttribute(scriptEl, key, value);
     });
+
+    // 4. 將 script 插入到指定的容器中
+    this.renderer.appendChild(this.giscusContainer.nativeElement, scriptEl);
   }
 }

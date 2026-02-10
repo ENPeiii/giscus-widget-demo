@@ -12,13 +12,7 @@ import { GiscusComment } from './shared/giscus-comment/giscus-comment';
     </article>
 
     <div class="w-lg">
-      <app-giscus-comment
-        repo="ENPeiii/giscus-widget-demo"
-        repoId="R_kgDORL2h1A"
-        categoryId="DIC_kwDORL2h1M4C2FFF"
-        [theme]="currentTheme()"
-        lang="zh-TW"
-      ></app-giscus-comment>
+      <app-giscus-comment/>
     </div>
 
   `
